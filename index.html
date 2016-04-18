@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>grimd</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="http://fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/skeleton.css">
+  <link rel="stylesheet" href="css/c3.min.css">
+  <link rel="stylesheet" href="css/reaper.css">
+  <link rel="icon" type="image/png" href="images/favicon.png">
+</head>
+<body>
+  <div id="app" class="container">
+    <div class="row">
+      <div class="twelve columns" style="margin-top: 1%">
+        <h1>grimd</h1>
+      </div>
+    </div>
+    <div class="row">
+      <div class="four columns" v-if="!loading">
+        <h5>blocking {{numDomains.toLocaleString()}} domains</h5>
+        <h5>{{queries.length.toLocaleString()}} queries, {{blocked}} blocked</h5>
+        <h5>{{percentageBlocked.toFixed(2)}}% of queries blocked</h5>
+        <button v-on:click="clearCache">clear cache</button>
+      </div>
+      <div v-else>
+        <h5>{{loadingText}}</h5>
+      </div>
+      <div class="eight columns">
+        <div id="chart"></div>
+      </div>
+    </div>
+    <div class="row" v-if="!loading && queries.length > 0" style="margin-top: 1%">
+      <div class="twelve columns">
+        <h2>log</h2>
+        <table class="u-full-width">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Client</th>
+              <th>Name</th>
+              <th>Type</th>
+              <th>Blocked</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="item in queries.items">
+              <td>{{item.date | formatUnix}}</td>
+              <td>{{item.client}}</td>
+              <td>{{item.query.name}}</td>
+              <td>{{item.query.type}}</td>
+              <td>
+                <span v-if="item.blocked == true" style="color: red">
+                  {{item.blocked}}
+                </span>
+                <span v-else style="color: green">
+                  {{item.blocked}}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <script src="js/jquery-2.2.2.min.js"></script>
+  <script src="js/d3.min.js"></script>
+  <script src="js/c3.min.js"></script>
+  <script src="js/vue.js"></script>
+  <script src="js/index.js"></script>
+</body>
+</html>
