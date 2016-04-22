@@ -126,7 +126,25 @@ var app = new Vue({
 })
 
 Vue.filter('formatUnix', function(value) {
-  var date = new Date(value * 1000)
-  //date.getFullYear().toString().substr(2,2)
-  return date.getMonth() + '/' + date.getDay() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds()
+  var d = new Date(value * 1000),
+		yyyy = d.getFullYear().toString().substr(2,2),
+		mm = ('0' + (d.getMonth() + 1)).slice(-2),
+		dd = ('0' + d.getDate()).slice(-2),
+		hh = d.getHours(),
+		h = hh,
+		min = ('0' + d.getMinutes()).slice(-2),
+		ampm = 'am',
+		time
+
+	if (hh > 12) {
+		h = hh - 12
+		ampm = 'pm'
+	} else if (hh === 12) {
+		h = 12
+		ampm = 'pm'
+	} else if (hh == 0) {
+		h = 12
+	}
+
+	return time = mm + '/' + dd + '/' + yyyy + ' ' + h + ':' + min + ' ' + ampm;
 })
