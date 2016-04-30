@@ -1,4 +1,4 @@
-var apiURL = 'http://grimd.example.com:12122'
+var apiURL = 'http://grimd.example.com:12122/'
 
 var app = new Vue({
     el: '#app',
