@@ -17,7 +17,10 @@
   <div id="app" class="container">
     <div class="row">
       <div class="twelve columns" style="margin-top: 1%">
-        <h1>grimd</h1>
+          <h1>grimd : 
+              <span v-if="active==true" style="color: green">Active</span>
+              <span v-else style="color: red">Not Active</span>
+          </h1>
       </div>
     </div>
     <div class="row">
@@ -25,7 +28,10 @@
         <h5>blocking {{numDomains.toLocaleString()}} domains</h5>
         <h5>{{queries.length.toLocaleString()}} queries, {{blocked}} blocked</h5>
         <h5>{{percentageBlocked.toFixed(2)}}% of queries blocked</h5>
+        <button v-if="active==false" v-on:click="setActive(true)">Activate</button>
+        <button v-else="active==true" v-on:click="setActive(false)">Deactivate</button>
         <button v-on:click="clearCache">clear cache</button>
+        <input type="text" maxlength="4" size="4" v-model="timeout"/> <button v-on:click="snooze">Snooze</button>
       </div>
       <div v-else>
         <h5>{{loadingText}}</h5>

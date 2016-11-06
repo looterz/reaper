@@ -1,4 +1,4 @@
-var apiURL = 'http://grimd.example.com:12122/'
+var apiURL = 'http://localhost:8080/'
 
 var app = new Vue({
     el: '#app',
@@ -8,11 +8,15 @@ var app = new Vue({
         blocked: 0,
         percentageBlocked: 0,
         loading: true,
-        loadingText: "loading data..."
+        loadingText: "loading data...",
+        active: false,
+        timeout: 300
     },
     created: function() {
         this.fetchQueries()
         this.fetchDomains()
+        this.getActive()
+        this.pollActive()
     },
     methods: {
         fetchQueries: function() {
@@ -121,6 +125,33 @@ var app = new Vue({
           $.get(apiURL + 'questioncache/clear', function(data) {
             self.fetchQueries()
           })
+        },
+        getActive: function() {
+            var self = this
+            $.get(apiURL + 'application/active', function(data) {
+                self.active = data.active
+            })
+        },
+        setActive: function(state) {
+            var self = this
+            state = state?"On":"Off"
+            $.ajax({url: apiURL + 'application/active?v=1&state='+state,
+                type: 'PUT',
+                success: function(data) {
+                self.active = data.active
+            }})
+        },
+        snooze: function() {
+            var self = this
+            $.ajax({url: apiURL + 'application/active?v=1&state=Snooze&timeout='+self.timeout,
+                type: 'PUT',
+                success: function(data) {
+                self.active = data.active
+            }})
+        },
+        pollActive: function() {
+            var self = this
+            setInterval(self.getActive, 1000)
         }
     }
 })
