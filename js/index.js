@@ -4,7 +4,6 @@ var app = new Vue({
     el: '#app',
     data: {
         queries: [],
-        r_queries: [],
         numDomains: 0,
         blocked: 0,
         percentageBlocked: 0,
@@ -24,8 +23,6 @@ var app = new Vue({
           var self = this
           $.get(apiURL + 'questioncache', function(data) {
               self.queries = data
-              self.r_queries = data
-              self.r_queries.items.reverse()
               self.generateStats()
           })
         },
@@ -157,6 +154,10 @@ var app = new Vue({
             setInterval(self.getActive, 1000)
         }
     }
+})
+
+Vue.filter('reverse', function (array) {
+  return array.slice().reverse()
 })
 
 Vue.filter('formatUnix', function(value) {

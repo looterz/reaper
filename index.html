@@ -17,7 +17,7 @@
   <div id="app" class="container">
     <div class="row">
       <div class="twelve columns" style="margin-top: 1%">
-          <h1>grimd : 
+          <h1>grimd :
               <span v-if="active==true" style="color: green">Active</span>
               <span v-else style="color: red">Not Active</span>
           </h1>
@@ -54,7 +54,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="item in r_queries.items">
+            <tr v-for="item in queries.items | reverse">
               <td>{{item.date | formatUnix}}</td>
               <td>{{item.client}}</td>
               <td>{{item.query.name}}</td>
