@@ -16,7 +16,7 @@ var app = new Vue({
         this.fetchQueries()
         this.fetchDomains()
         this.getActive()
-        this.pollActive()
+        //this.pollActive()
     },
     methods: {
         fetchQueries: function() {
