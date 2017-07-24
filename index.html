@@ -54,7 +54,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="item in queries.items | reverse">
+            <tr v-for="item in queries.items">
               <td>{{item.date | formatUnix}}</td>
               <td>{{item.client}}</td>
               <td>{{item.query.name}}</td>
@@ -73,7 +73,7 @@
       </div>
     </div>
   </div>
-  <script src="js/jquery-2.2.2.min.js"></script>
+  <script src="js/jquery-3.2.1.min.js"></script>
   <script src="js/d3.min.js"></script>
   <script src="js/c3.min.js"></script>
   <script src="js/vue.min.js"></script>
