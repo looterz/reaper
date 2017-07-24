@@ -22,6 +22,7 @@ var app = new Vue({
         fetchQueries: function() {
           var self = this
           $.get(apiURL + 'questioncache', function(data) {
+              data.items.reverse()
               self.queries = data
               self.generateStats()
           })
@@ -154,10 +155,6 @@ var app = new Vue({
             setInterval(self.getActive, 1000)
         }
     }
-})
-
-Vue.filter('reverse', function (array) {
-  return array.slice().reverse()
 })
 
 Vue.filter('formatUnix', function(value) {
