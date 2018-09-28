@@ -1,4 +1,4 @@
-var apiURL = 'http://localhost:8080/'
+var apiURL = typeof(apiURL) == 'undefined' ? 'http://localhost:8080/' : apiURL
 
 var app = new Vue({
     el: '#app',
