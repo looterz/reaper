@@ -60,10 +60,12 @@ var app = new Vue({
           var cols = []
           var clients = []
           var xPlot = ['x']
+          var labels = {}
 
           self.queries.items.forEach(function(item) {
             var d = new Date(item.date * 1000)
-            var hour = d.getHours()
+            var hour = Math.floor(item.date/3600)
+            var tag = d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+' '+d.getHours()
 
             if (clients[item.client]) {
               if (clients[item.client].hours[hour]) {
@@ -79,6 +81,7 @@ var app = new Vue({
 
             if (xPlot.indexOf(hour) == -1) {
               xPlot.push(hour)
+              labels[hour] = tag
             }
           })
 
@@ -104,6 +107,9 @@ var app = new Vue({
                     label: {
                       text: 'time',
                       position: 'outer-middle'
+                    },
+                    tick: {
+                      format: function (hour) { return labels[hour]; }
                     }
                 },
                 y: {
