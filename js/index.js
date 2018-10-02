@@ -98,6 +98,9 @@ var app = new Vue({
 
           var chart = c3.generate({
               bindto: '#chart',
+              padding: {
+                  right: 50
+              },
               data: {
                   x: 'x',
                   columns: cols
@@ -155,6 +158,12 @@ var app = new Vue({
                 success: function(data) {
                 self.active = data.active
             }})
+        },
+        reload_config: function(){
+            var self = this
+            $.ajax({url: apiURL + 'blocklist/update',
+                type: 'POST',
+            })
         },
         pollActive: function() {
             var self = this

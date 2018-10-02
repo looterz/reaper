@@ -31,8 +31,12 @@
         <button v-if="active==false" v-on:click="setActive(true)">Activate</button>
         <button v-else="active==true" v-on:click="setActive(false)">Deactivate</button>
         <button v-on:click="clearCache">clear cache</button>
-        <input type="text" maxlength="4" size="4" v-model="timeout"/> <button v-on:click="snooze">Snooze</button>
-      </div>
+        <div>
+            <input type="text" maxlength="4" size="4" v-model="timeout"/>
+            <button v-on:click="snooze">Snooze</button>
+        </div>
+        <button v-on:click="reload_config">Reload Blocklist</button>
+      </div>                                          
       <div v-else>
         <h5>{{loadingText}}</h5>
       </div>
