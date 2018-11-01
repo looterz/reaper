@@ -1,7 +1,6 @@
 var apiURL = typeof (apiURL) == 'undefined' ? 'http://localhost:8080/' : apiURL
 
-var minutes_per_interval = 5
-function getInterval(timestamp) {
+function getInterval(timestamp, minutes_per_interval) {
   return Math.floor(timestamp / 3600 * (60 / minutes_per_interval))
 }
 var app = new Vue({
@@ -85,9 +84,14 @@ var app = new Vue({
       var labels = {}
       var firstPoint = null
 
+      var timeDiff = self.queries[0].date - self.queries[self.queries.length-1].date
+      var intervals = 30
+      var minutes_per_interval = Math.max(1,Math.floor(timeDiff/60/intervals))
+      var lastDay = 0
+
       self.queries.forEach(function (item) {
         var d = new Date(item.date * 1000)
-        var interval = getInterval(item.date)
+        var interval = getInterval(item.date, minutes_per_interval)
 
         if (clients[item.client]) {
           if (clients[item.client].intervals[interval]) {
@@ -107,8 +111,9 @@ var app = new Vue({
         if (xPlot.indexOf(interval) == -1) {
           xPlot.push(interval)
           minutes = minutes_per_interval * Math.floor(d.getMinutes() / minutes_per_interval)
-          if (d.getHours() == 0 && minutes == 0) {
+          if (d.getDate() > lastDay || (d.getHours() == 0 && minutes == 0)) {
             var tag = d.getDate() + '/' + (d.getMonth() + 1)
+            lastDay = d.getDate()
           } else if (minutes == 0) {
             var tag = d.getHours() + ":00"
           } else {
@@ -121,7 +126,7 @@ var app = new Vue({
       var d = new Date(firstPoint * 1000)
       minutes = minutes_per_interval * Math.floor(d.getMinutes() / minutes_per_interval)
       var tag = d.getDate() + '/' + (d.getMonth() + 1) + ' ' + d.getHours() + ":" + minutes
-      var pos = getInterval(firstPoint)
+      var pos = getInterval(firstPoint, minutes_per_interval)
       labels[pos] = tag
 
       cols.push(xPlot)
