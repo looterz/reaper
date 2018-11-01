@@ -1,5 +1,8 @@
 var apiURL = typeof (apiURL) == 'undefined' ? 'http://localhost:8080/' : apiURL
 
+function getInterval(timestamp, minutes_per_interval) {
+  return Math.floor(timestamp / 3600 * (60 / minutes_per_interval))
+}
 var app = new Vue({
   el: '#app',
   data: {
@@ -65,7 +68,7 @@ var app = new Vue({
       }
 
       self.blocked = blocked.length > 0 ? blocked.length : 0
-      self.percentageBlocked = (self.queries ) ? (blocked.length / self.queries.length * 100) : 0
+      self.percentageBlocked = (self.queries) ? (blocked.length / self.queries.length * 100) : 0
 
       if (self.queries) {
         self.generateChart()
@@ -79,36 +82,59 @@ var app = new Vue({
       var clients = []
       var xPlot = ['x']
       var labels = {}
+      var firstPoint = null
+
+      var timeDiff = self.queries[0].date - self.queries[self.queries.length-1].date
+      var intervals = 30
+      var minutes_per_interval = Math.max(1,Math.floor(timeDiff/60/intervals))
+      var lastDay = 0
 
       self.queries.forEach(function (item) {
         var d = new Date(item.date * 1000)
-        var hour = Math.floor(item.date / 3600)
-        var tag = d.getDate() + '/' + (d.getMonth() + 1) + '/' + d.getFullYear() + ' ' + d.getHours()
+        var interval = getInterval(item.date, minutes_per_interval)
 
         if (clients[item.client]) {
-          if (clients[item.client].hours[hour]) {
-            clients[item.client].hours[hour]++
+          if (clients[item.client].intervals[interval]) {
+            clients[item.client].intervals[interval]++
           } else {
-            clients[item.client].hours[hour] = 1
+            clients[item.client].intervals[interval] = 1
           }
         } else {
           clients[item.client] = {
-            hours: []
+            intervals: []
           }
         }
 
-        if (xPlot.indexOf(hour) == -1) {
-          xPlot.push(hour)
-          labels[hour] = tag
+        if (firstPoint == null || firstPoint > item.date) {
+          firstPoint = item.date
+        }
+        if (xPlot.indexOf(interval) == -1) {
+          xPlot.push(interval)
+          minutes = minutes_per_interval * Math.floor(d.getMinutes() / minutes_per_interval)
+          if (d.getDate() > lastDay || (d.getHours() == 0 && minutes == 0)) {
+            var tag = d.getDate() + '/' + (d.getMonth() + 1)
+            lastDay = d.getDate()
+          } else if (minutes == 0) {
+            var tag = d.getHours() + ":00"
+          } else {
+            var tag = ":" + minutes
+          }
+          labels[interval] = tag
         }
       })
+
+      var d = new Date(firstPoint * 1000)
+      minutes = minutes_per_interval * Math.floor(d.getMinutes() / minutes_per_interval)
+      var tag = d.getDate() + '/' + (d.getMonth() + 1) + ' ' + d.getHours() + ":" + minutes
+      var pos = getInterval(firstPoint, minutes_per_interval)
+      labels[pos] = tag
 
       cols.push(xPlot)
 
       for (var i in clients) {
         var obj = clients[i]
         var newYPlot = [i]
-        obj.hours.forEach(function (num) {
+        obj.intervals.forEach(function (num) {
           newYPlot.push(num)
         })
         Array.prototype.push.apply(cols, [newYPlot])
