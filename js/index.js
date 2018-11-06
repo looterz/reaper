@@ -84,7 +84,7 @@ var app = new Vue({
       var labels = {}
       var firstPoint = null
 
-      var timeDiff = self.queries[0].date - self.queries[self.queries.length-1].date
+      var timeDiff = self.queries.length ? self.queries[0].date - self.queries[self.queries.length-1].date : 1;
       var intervals = 30
       var minutes_per_interval = Math.max(1,Math.floor(timeDiff/60/intervals))
       var lastDay = 0
